@@ -7,13 +7,14 @@ using SalesWebMvc.Models;
 
 namespace SalesWebMvc.Data
 {
-    public class SalesWebMvcContext : DbContext
+    public class SalesWebMvcContext :  DbContext
     {
         public SalesWebMvcContext (DbContextOptions<SalesWebMvcContext> options)
             : base(options)
         {
+            
         }
 
-        public DbSet<SalesWebMvc.Models.Departamento> Departamento { get; set; } = default!;
+        public DbSet<Departamento> Departamento { get; set; } = default!;
     }
 }
