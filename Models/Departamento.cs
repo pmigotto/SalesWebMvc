@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SalesWebMvc.Models {
     public class Departamento {
 
-        public Departamento() { 
-        }
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
 
         public ICollection<Seller> Sellers { get; set; } = new List<Seller>();
 
-        public Departamento(int id, string nome, ICollection<Seller> sellers) {
+        public Departamento() {
+        }
+
+        public Departamento(int id, string nome) {
             Id = id;
             Nome = nome ?? string.Empty;
-            Sellers = sellers;
         }
 
         public void addSeller(Seller seller) {
@@ -23,7 +24,7 @@ namespace SalesWebMvc.Models {
 
         public double totalSales (DateTime initial, DateTime final) { 
             
-            return 0;
+            return Sellers.Sum(s => s.totalSalles(initial,final));
         }
     }
 }
