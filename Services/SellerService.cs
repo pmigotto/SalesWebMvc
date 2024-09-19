@@ -22,6 +22,7 @@ namespace SalesWebMvc.Services {
             seller.Departament  = _context.Departamento.First();
             _context.Add(seller);
             _context.SaveChanges();
+
         }
 
     }
