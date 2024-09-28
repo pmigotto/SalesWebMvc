@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SalesWebMvc.Models {
-    public class Departamento {
+    public class Department {
 
         public int Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
         public ICollection<Seller> Sellers { get; set; } = new List<Seller>();
 
-        public Departamento() {
+        public Department() {
         }
 
-        public Departamento(int id, string nome) {
+        public Department(int id, string name) {
             Id = id;
-            Nome = nome ?? string.Empty;
+            Name = name ?? string.Empty;
         }
 
         public void addSeller(Seller seller) {
