@@ -4,6 +4,8 @@ using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services;
 using System.Collections.Generic;
 using SalesWebMvc.Services.Exceptions;
+using System.Diagnostics;
+using System;
 
 namespace SalesWebMvc.Controllers {
     public class SellersController : Controller {
@@ -37,12 +39,12 @@ namespace SalesWebMvc.Controllers {
 
         public IActionResult Delete(int? id) {
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não informado" }); 
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Registro não encontrado" });
             }
             return View(obj);
         }
@@ -58,12 +60,12 @@ namespace SalesWebMvc.Controllers {
         public IActionResult Details(int? id) {
 
             if (id == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não informado" });
             }
 
             var obj = _sellerService.FindById(id.Value);
             if (obj == null) {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Registro não encontrado" }); ;
             }
             return View(obj);
 
@@ -73,13 +75,13 @@ namespace SalesWebMvc.Controllers {
 
             if (id == null) {
 
-                return NotFound();
+                return RedirectToAction(nameof(Error), new {message="Id não informado"});
             }
 
             var obj = _sellerService.FindById(id.Value);
 
             if (obj == null) {
-                return NotFound();
+                RedirectToAction(nameof(Error), new { message = "Registro não encontrado" });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -94,21 +96,25 @@ namespace SalesWebMvc.Controllers {
         public IActionResult Edit(Seller seller) {
 
             if (seller is null) {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Objeto não encontrado" });
             }
                   
             try {
 
                 _sellerService.Update(seller);
             }
-            catch (NotFoundException) {  
-                 NotFound();
+            catch (ApplicationException e) {
+                RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyException) {
-                return BadRequest();
-            }
+            
             return RedirectToAction(nameof(Index));
 
+        }
+
+        public IActionResult Error(string message) {
+            var viewModel = new ErrorViewModel { Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier };
+            
+            return View(viewModel);
         }
     }
 }
