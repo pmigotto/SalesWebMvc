@@ -14,7 +14,7 @@ namespace SalesWebMvc.Services {
             _context = context;
         }
 
-        public List<Seller>FindAll(){
+        public List<Seller> FindAll() {
             return _context.Seller.ToList();
         }
 
@@ -26,7 +26,7 @@ namespace SalesWebMvc.Services {
         }
 
         public Seller FindById(int id) {
-            return _context.Seller.Include(p=> p.Department).FirstOrDefault(obj => obj.Id == id);
+            return _context.Seller.Include(p => p.Department).FirstOrDefault(obj => obj.Id == id);
         }
 
         public void Remove(int id) {
@@ -34,7 +34,25 @@ namespace SalesWebMvc.Services {
             var obj = _context.Seller.Find(id);
             _context.Remove(obj);
             _context.SaveChanges();
+
         }
 
+        public void Update(Seller seller) {
+
+            if (!_context.Seller.Any(x => x.Id == seller.Id)) {
+                throw new Exceptions.NotFoundException("Vendedor não encontrado");
+            }
+            try {
+
+
+                _context.Update(seller);
+                _context.SaveChanges();
+
+            }
+            catch (Exceptions.DbConcurrencyException ex) {
+
+                throw new Exceptions.DbConcurrencyException(ex.Message);
+            }
+        }
     }
 }
