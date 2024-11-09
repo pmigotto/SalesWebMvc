@@ -1,17 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
 namespace SalesWebMvc.Models {
     public class Seller {
 
         public int Id { get; set; }
-        public string Name { get; set; }  
 
-        public string Email  { get; set; }
+        [Display(Name = "Nome")]
+        [Required(ErrorMessage = "{0} é obrigatório")]
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "{0} deve ter entre {2} e {1} caracteres")]
+        public string Name { get; set; }
 
+        [Required(ErrorMessage = "{0} é obrigatório")]
+        [DataType(DataType.EmailAddress)]
+        [EmailAddress(ErrorMessage ="{0} inválido")]
+        public string Email { get; set; }
+
+        [Display(Name = "Data Nascimento")]
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime BirthDate { get; set; }
 
+        [Display(Name = "Salário base")]
+        [DisplayFormat(DataFormatString = "{0:F2}")]
+        [Range(100.00,50000.00,ErrorMessage = "{0} limites aceitos entre {1} e {2}  ")]
         public double BaseSalary { get; set; }
 
         public Department Department { get; set; }
