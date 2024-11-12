@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using SalesWebMvc.Services.Exceptions;
+using System.Data;
 
 namespace SalesWebMvc.Services {
     public class SellerService {
@@ -33,9 +35,12 @@ namespace SalesWebMvc.Services {
 
         public async Task RemoveAsync(int id) {
 
-            var obj = _context.Seller.Find(id);
-            _context.Remove(obj);
-            await _context.SaveChangesAsync();
+            try {
+                var obj = _context.Seller.Find(id);
+                _context.Remove(obj);
+                await _context.SaveChangesAsync();
+            }catch (IntegrityException e) {
+                throw new IntegrityException("Vendedor possui vendas.\nExclusão não permitida!");            }
 
         }
 
